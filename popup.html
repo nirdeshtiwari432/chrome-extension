@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Checker</title>
+  <script defer src="popup.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+      width: 300px;
+    }
+    input, button {
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px;
+      font-size: 14px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ddd;
+      overflow: auto;
+      max-height: 200px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Website Checker</h1>
+  <input type="text" id="domain" placeholder="Loading current tab domain..." readonly>
+  <button id="check">Check Website</button>
+  <pre id="result"></pre>
+</body>
+</html>

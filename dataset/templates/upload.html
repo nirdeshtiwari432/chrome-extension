@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV Files</title>
+</head>
+<body>
+    <h2>Upload CSV Files</h2>
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <label for="file1">Choose first CSV file:</label>
+        <input type="file" name="file1" required><br><br>
+        
+        <label for="file2">Choose second CSV file:</label>
+        <input type="file" name="file2" required><br><br>
+
+        <button type="submit">Upload & Merge</button>
+    </form>
+</body>
+</html>
