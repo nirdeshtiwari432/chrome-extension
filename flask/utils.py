@@ -4,7 +4,7 @@ import ssl
 import socket
 from datetime import datetime
 
-TRUSTED_SSL_PROVIDERS = {"DigiCert Inc", "Entrust, Inc.", "GlobalSign", "Sectigo Limited", "Let's Encrypt"}
+TRUSTED_SSL_PROVIDERS = {"DigiCert Inc", "Entrust, Inc.", "GlobalSign", "Sectigo Limited", "Let's Encrypt","Google Trust Services"}
 
 def whois_lookup(domain):
     try:
@@ -34,17 +34,51 @@ def ssl_certificate_check(domain):
     except Exception:
         return None
 
+import json
+from datetime import datetime
+
+TRUSTED_SSL_PROVIDERS = {"DigiCert", "Entrust", "Google Trust Services", "Let's Encrypt"}
+
 def calculate_score(domain, whois_info, ssl_info, dns_info, js_ip, db_ip):
     score = 0
-    if whois_info and whois_info.creation_date:
-        creation_date = whois_info.creation_date[0] if isinstance(whois_info.creation_date, list) else whois_info.creation_date
-        age = (datetime.utcnow() - creation_date).days // 365
-        if age > 2:
-            score += 50
-    if ssl_info and ssl_info.get("issuer"):
+
+    # Fix: Convert WHOIS JSON string to dictionary
+    if isinstance(whois_info, str):
+        whois_info = json.loads(whois_info)
+
+    # Fix: Extract and convert creation_date properly
+    if whois_info and "creation_date" in whois_info:
+        creation_date_data = whois_info["creation_date"]
+        if isinstance(creation_date_data, list):
+            creation_date_data = creation_date_data[0]
+
+        if isinstance(creation_date_data, str):
+            try:
+                creation_date = datetime.strptime(creation_date_data, "%Y-%m-%d %H:%M:%S")
+            except ValueError:
+                creation_date = None
+        else:
+            creation_date = creation_date_data
+
+        #  Calculate domain age
+        if creation_date:
+            age = (datetime.utcnow() - creation_date).days // 365
+            if age >= 1:
+                score += 50  # Should be added correctly now
+
+    #  Fix: Proper SSL Issuer Check
+    if ssl_info and "issuer" in ssl_info:
         issuer_org = ssl_info["issuer"].get("organizationName", "")
         if issuer_org in TRUSTED_SSL_PROVIDERS:
             score += 30
-    if js_ip in dns_info and (db_ip is None or js_ip == db_ip):
-        score += 20
+
+    #  Fix: DNS and IP Matching
+    if dns_info:
+        if db_ip in dns_info:
+            score += 20  # If DB IP matches
+        elif js_ip in dns_info:
+            score += 10  # If JS IP matches
+    
+
     return score
+

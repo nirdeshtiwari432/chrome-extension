@@ -1,16 +1,19 @@
 from flask import Flask
+from config import Config
 from models import db
-import secrets
 from routes import app_routes  # Import routes
 
 app = Flask(__name__)
-app.config.from_object("config.Config")  # Load Configurations
-app.register_blueprint(app_routes)  # Register Routes
-db.init_app(app)
+app.config.from_object(Config)  # Load Configurations
 
-# Ensure tables are created
+db.init_app(app)  # Initialize SQLAlchemy
+
+# Create database tables
 with app.app_context():
     db.create_all()
 
+# Register Blueprints
+app.register_blueprint(app_routes)
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True)

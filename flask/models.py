@@ -1,13 +1,13 @@
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 
 db = SQLAlchemy()
 
 class Test(db.Model):
-    sno = db.Column(db.Integer, primary_key=True)
-    domain = db.Column(db.String(200), nullable=False)
-    ip = db.Column(db.String(500), nullable=False)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
+    __tablename__ = "your_table"
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    rank = db.Column(db.String(255), nullable=True)  # "Rank" is a reserved keyword, so avoid using it directly
+    domain = db.Column(db.String(255), nullable=False)
+    ip_address = db.Column(db.String(150), nullable=True)
 
     def __repr__(self):
-        return f"{self.sno} - {self.domain}"
+        return f"<Test {self.id}, {self.domain}, {self.ip_address}>"

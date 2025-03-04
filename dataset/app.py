@@ -21,47 +21,30 @@ DB_CONFIG = {
 @app.route("/", methods=["GET", "POST"])
 def upload_file():
     if request.method == "POST":
-        if "file1" not in request.files or "file2" not in request.files:
+        if "file1" not in request.files:
             return "Missing files"
 
         file1 = request.files["file1"]
-        file2 = request.files["file2"]
+        
 
-        if file1.filename == "" or file2.filename == "":
+        if file1.filename == "":
             return "No selected files"
 
         file1_path = os.path.join(app.config["UPLOAD_FOLDER"], file1.filename)
-        file2_path = os.path.join(app.config["UPLOAD_FOLDER"], file2.filename)
-
+        
         file1.save(file1_path)
-        file2.save(file2_path)
+       
 
-        # Merge CSV
-        merged_file = os.path.join(app.config["UPLOAD_FOLDER"], "merged.csv")
-        merged_df = merge_csv(file1_path, file2_path, merged_file)
+        
 
         # Upload to database
-        if merged_df is not None:
-            upload_to_db(merged_file, "your_table")
+        if file1_path is not None:
+            upload_to_db(file1_path, "your_table")
             return "File uploaded and data saved in database! <br><a href='/view_data'>View Uploaded Data</a>"
 
     return render_template("upload.html")
 
 
-def merge_csv(file1, file2, output_file):
-    """Merges two CSV files and saves them."""
-    try:
-        df1 = pd.read_csv(file1)
-        df2 = pd.read_csv(file2)
-        
-        merged_df = pd.concat([df1, df2], ignore_index=True)
-        merged_df.to_csv(output_file, index=False)
-
-        print("Merged CSV saved successfully!")
-        return merged_df
-    except Exception as e:
-        print(f"Error merging CSV files: {e}")
-        return None
 
 
 def upload_to_db(csv_file, table_name):
