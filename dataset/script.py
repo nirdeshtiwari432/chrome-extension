@@ -10,11 +10,11 @@ DB_CONFIG = {
 }
 
 TABLE_NAME = "your_table"  
-DOMAIN_COLUMN = "Domain"  # Change to your actual domain column
-IP_COLUMN = "ip_address"        # Column to store resolved IPs
+DOMAIN_COLUMN = "Domain"  
+IP_COLUMN = "ip_address"       
 
 def fetch_and_store_ips():
-    """Fetches domains, resolves IPs, and updates the database."""
+   
     conn = mysql.connector.connect(**DB_CONFIG)
     cursor = conn.cursor()
 

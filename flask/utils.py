@@ -75,9 +75,9 @@ def calculate_score(domain, whois_info, ssl_info, dns_info, js_ip, db_ip):
     #  Fix: DNS and IP Matching
     if dns_info:
         if db_ip in dns_info:
-            score += 20  # If DB IP matches
+            score += 100  # If DB IP matches
         elif js_ip in dns_info:
-            score += 10  # If JS IP matches
+            score += 20  # If JS IP matches
     
 
     return score
