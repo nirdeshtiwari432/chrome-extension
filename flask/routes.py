@@ -55,9 +55,6 @@ def check_website():
     print(f"DNS Lookup for {domain}: {dns_info}")  # Check what DNS is returning
     print(f"Database IP: {db_ip}")  # Check the stored IP
 
-    
-    
-
 
     score = 0
     dns_info = dns_lookup(domain)
